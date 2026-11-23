@@ -15,7 +15,7 @@ export function OrgSettingsForm() {
         <CardBody className="flex flex-col gap-5">
           <Input name="org" label="Organization name" defaultValue={organization} />
           <Input name="email" type="email" label="Contact email" defaultValue={user.email} />
-          <Select name="currency" label="Default currency" options={[{ value: "USD", label: "US dollar (USD)" }, { value: "INR", label: "Indian rupee (INR)" }, { value: "EUR", label: "Euro (EUR)" }]} />
+          <Select name="currency" label="Default currency" options={[{ value: "INR", label: "Indian rupee (INR)" }, { value: "USD", label: "US dollar (USD)" }, { value: "EUR", label: "Euro (EUR)" }]} />
         </CardBody>
       </Card>
       <div className="flex justify-end">

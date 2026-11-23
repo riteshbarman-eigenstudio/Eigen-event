@@ -8,14 +8,14 @@ export function HomeHero() {
       <Badge>MVP preview</Badge>
       <h1 className="text-display font-semibold tracking-tight text-gray-900">Every event. One platform.</h1>
       <p className="max-w-2xl text-h3 text-gray-600">
-        Plan it, sell tickets, run the day and see the numbers, all in a single place built for organizers.
+        Plan it, take registrations, run the day and see the numbers, all in a single place built for organizers.
       </p>
       <div className="flex flex-wrap justify-center gap-3">
         <Button href="/events" size="lg" iconTrailing={ArrowRight}>
           Open dashboard
         </Button>
-        <Button href="/e/eigen-summit-2027" size="lg" color="secondary">
-          View a sample event page
+        <Button href="/events/new" size="lg" color="secondary">
+          Create an event
         </Button>
       </div>
     </section>

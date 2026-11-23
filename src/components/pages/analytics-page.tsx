@@ -7,7 +7,7 @@ import { trafficSources } from "@/lib/mock-data";
 export function AnalyticsPage() {
   return (
     <>
-      <PageHeader title="Analytics" description="Sales, traffic and attendance." />
+      <PageHeader title="Analytics" description="Registrations, traffic and attendance." />
       <AnalyticsKpis />
       <div className="grid gap-6 xl:grid-cols-3">
         <div className="xl:col-span-2">

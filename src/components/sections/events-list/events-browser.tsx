@@ -12,18 +12,20 @@ import { Table, TableCell, TableHead, TableRow } from "@/vendor/untitledui/appli
 import { ProgressBar } from "@/vendor/untitledui/base/progress-bar";
 import { cx } from "@/vendor/untitledui/utils/cx";
 import { formatDate, formatMoney, percent } from "@/lib/utils/format";
-import type { EventItem, EventStatus } from "@/types";
+import { useEvents } from "@/lib/store";
+import type { EventStatus } from "@/types";
 
 const statusColor: Record<EventStatus, BadgeColor> = { draft: "gray", "on-sale": "success", live: "brand", ended: "gray" };
-const statusLabel: Record<EventStatus, string> = { draft: "Draft", "on-sale": "On sale", live: "Live", ended: "Ended" };
+const statusLabel: Record<EventStatus, string> = { draft: "Draft", "on-sale": "Registration open", live: "Live", ended: "Ended" };
 const filters: { id: EventStatus | "all"; label: string }[] = [
   { id: "all", label: "All" },
-  { id: "on-sale", label: "On sale" },
+  { id: "on-sale", label: "Registration open" },
   { id: "draft", label: "Draft" },
   { id: "ended", label: "Ended" },
 ];
 
-export function EventsBrowser({ events }: { events: EventItem[] }) {
+export function EventsBrowser() {
+  const events = useEvents();
   const [filter, setFilter] = useState<EventStatus | "all">("all");
   const [query, setQuery] = useState("");
   const rows = useMemo(

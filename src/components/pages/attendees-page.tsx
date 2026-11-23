@@ -1,12 +1,16 @@
+"use client";
+
 import { PageHeader } from "@/components/layout/page-header";
 import { AttendeeTable } from "@/components/sections/attendees/attendee-table";
-import { attendees } from "@/lib/mock-data";
+import { useEvent } from "@/context/event-context";
+import { useEventAttendees } from "@/lib/store";
 
 export function AttendeesPage() {
+  const event = useEvent();
   return (
     <>
       <PageHeader title="Attendees" description="Everyone registered for this event." />
-      <AttendeeTable attendees={attendees} />
+      <AttendeeTable attendees={useEventAttendees(event)} />
     </>
   );
 }

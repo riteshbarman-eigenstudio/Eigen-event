@@ -13,64 +13,8 @@ import type {
   TrafficSource,
 } from "@/types";
 
-export const events: EventItem[] = [
-  {
-    id: "evt_1",
-    slug: "eigen-summit-2027",
-    name: "Eigen Summit 2027",
-    tagline: "Two days on building products people love.",
-    startsAt: "2027-03-14T09:00:00",
-    city: "Bengaluru",
-    format: "hybrid",
-    status: "on-sale",
-    capacity: 1500,
-    registered: 1284,
-    revenue: 48210,
-    checkedIn: 0,
-  },
-  {
-    id: "evt_2",
-    slug: "design-systems-meetup",
-    name: "Design Systems Meetup",
-    tagline: "A relaxed evening of talks and demos.",
-    startsAt: "2026-12-04T18:00:00",
-    city: "Mumbai",
-    format: "in-person",
-    status: "on-sale",
-    capacity: 200,
-    registered: 168,
-    revenue: 0,
-    checkedIn: 0,
-  },
-  {
-    id: "evt_3",
-    slug: "product-webinar-series",
-    name: "Product Webinar Series",
-    tagline: "Monthly live sessions with operators.",
-    startsAt: "2026-11-10T16:00:00",
-    city: "Online",
-    format: "virtual",
-    status: "ended",
-    capacity: 800,
-    registered: 742,
-    revenue: 9640,
-    checkedIn: 611,
-  },
-  {
-    id: "evt_4",
-    slug: "founders-retreat",
-    name: "Founders Retreat",
-    tagline: "A private weekend for early-stage teams.",
-    startsAt: "2027-05-22T10:00:00",
-    city: "Goa",
-    format: "in-person",
-    status: "draft",
-    capacity: 60,
-    registered: 0,
-    revenue: 0,
-    checkedIn: 0,
-  },
-];
+// No demo events: events are created by the user in the app.
+export const events: EventItem[] = [];
 
 export const tickets: TicketType[] = [
   { id: "t1", name: "General admission", kind: "paid", price: 49, sold: 412, total: 500, status: "on-sale", waitlist: 0 },
@@ -82,7 +26,7 @@ export const tickets: TicketType[] = [
 export const promoCodes: PromoCode[] = [
   { code: "EARLYBIRD", discount: "20% off", used: 212, limit: 300, active: true },
   { code: "SPEAKER100", discount: "100% off", used: 24, limit: 30, active: true },
-  { code: "PARTNER15", discount: "$15 off", used: 41, limit: 100, active: false },
+  { code: "PARTNER15", discount: "₹15 off", used: 41, limit: 100, active: false },
 ];
 
 export const orders: Order[] = [

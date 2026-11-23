@@ -1,13 +1,17 @@
+"use client";
+
 import { Card, CardBody, CardHeader } from "@/vendor/untitledui/application/card";
-import { salesByWeek } from "@/lib/mock-data";
+import { useEvent } from "@/context/event-context";
+import { useWeeklyRegistrations } from "@/lib/store";
 
 export function SalesChart() {
-  const max = Math.max(...salesByWeek);
+  const salesByWeek = useWeeklyRegistrations(useEvent());
+  const max = Math.max(1, ...salesByWeek);
   return (
     <Card>
-      <CardHeader title="Tickets sold per week" description="Sample data" />
+      <CardHeader title="People registered per week" description="Last 12 weeks" />
       <CardBody>
-        <div className="flex h-48 items-end gap-3" role="img" aria-label="Bar chart of weekly ticket sales">
+        <div className="flex h-48 items-end gap-3" role="img" aria-label="Bar chart of weekly registrations">
           {salesByWeek.map((v, i) => (
             <div key={i} className="flex h-full flex-1 flex-col items-center justify-end gap-2">
               <div

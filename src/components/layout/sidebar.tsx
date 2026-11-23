@@ -24,6 +24,7 @@ export function Sidebar() {
               <Link
                 key={item.href}
                 href={item.href}
+                data-tour={`nav-${item.label.toLowerCase()}`}
                 className={cx(
                   "flex items-center gap-3 rounded-md px-3 py-2 text-sm font-semibold transition",
                   active ? "bg-gray-50 text-gray-900" : "text-gray-600 hover:bg-gray-50 hover:text-gray-900",

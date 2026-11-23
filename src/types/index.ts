@@ -12,8 +12,24 @@ export interface EventItem {
   status: EventStatus;
   capacity: number;
   registered: number;
-  revenue: number; // USD
+  revenue: number; // INR
   checkedIn: number;
+  /** Set for events created in the demo (stored in the browser). */
+  created?: boolean;
+  visibility?: "public" | "unlisted" | "private";
+  timezone?: string;
+}
+
+/** A completed registration made on the public event page. */
+export interface Registration {
+  id: string;
+  eventId: string;
+  buyer: string;
+  email: string;
+  lines: { ticketId: string; name: string; qty: number; price: number }[];
+  qty: number;
+  total: number;
+  createdAt: string; // ISO
 }
 
 export interface TicketType {
@@ -97,4 +113,14 @@ export interface Integration {
 export interface TrafficSource {
   name: string;
   share: number;
+}
+
+/** A demo email sent from the Messaging tab. The HTML is stored exactly as "sent". */
+export interface EmailCampaign {
+  id: string;
+  eventId: string;
+  subject: string;
+  recipients: string[];
+  html: string;
+  sentAt: string; // ISO
 }

@@ -22,7 +22,7 @@ export function EventHero({ event }: { event: EventItem }) {
           </span>
         </div>
         <Button href="#tickets" size="lg">
-          Get tickets
+          Register now
         </Button>
       </div>
     </section>

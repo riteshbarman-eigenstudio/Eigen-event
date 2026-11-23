@@ -5,7 +5,7 @@ import { formatMoney, percent } from "@/lib/utils/format";
 import type { TicketType } from "@/types";
 
 const color: Record<TicketType["status"], BadgeColor> = { "on-sale": "success", "sold-out": "gray", scheduled: "warning" };
-const label: Record<TicketType["status"], string> = { "on-sale": "On sale", "sold-out": "Sold out", scheduled: "Scheduled" };
+const label: Record<TicketType["status"], string> = { "on-sale": "Open", "sold-out": "Full", scheduled: "Scheduled" };
 
 export function TicketTypeList({ tickets }: { tickets: TicketType[] }) {
   return (
@@ -22,7 +22,7 @@ export function TicketTypeList({ tickets }: { tickets: TicketType[] }) {
           <ProgressBar value={percent(t.sold, t.total)} />
           <div className="flex justify-between text-sm text-gray-600">
             <span>
-              {t.sold} of {t.total} sold
+              {t.sold} of {t.total} registered
             </span>
             {t.waitlist > 0 && <span>{t.waitlist} on waitlist</span>}
           </div>

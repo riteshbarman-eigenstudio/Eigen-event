@@ -19,7 +19,7 @@ export function PublicHeader({ cta = true }: { cta?: boolean }) {
         </nav>
         {cta && (
           <Button href="#tickets" size="sm">
-            Get tickets
+            Register
           </Button>
         )}
       </div>

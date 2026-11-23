@@ -1,12 +1,20 @@
 import { cx } from "@/vendor/untitledui/utils/cx";
 
-/** Eigen Event mark: charcoal tile, white lambda, grey up-right arrow. */
+/** Eigen Event mark: light rounded tile, serif lambda with foot serifs, small calendar (event) glyph top right. */
 export function LogoMark({ className }: { className?: string }) {
   return (
     <svg viewBox="0 0 48 48" className={cx("size-8", className)} aria-hidden="true">
-      <rect x="2" y="2" width="44" height="44" rx="13" fill="#262A32" />
-      <path d="M14.5 11.5 33.5 37M25.3 25.6 14.5 37" fill="none" stroke="#fff" strokeWidth="4.6" strokeLinecap="round" strokeLinejoin="round" />
-      <path d="M29.5 18.5 36.5 11.5M30.5 11.5h6v6" fill="none" stroke="#A3A2A9" strokeWidth="3.2" strokeLinecap="round" strokeLinejoin="round" />
+      <defs>
+        <linearGradient id="logo-tile" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stopColor="#FFFFFF" />
+          <stop offset="1" stopColor="#E4E7EC" />
+        </linearGradient>
+      </defs>
+      <rect x="1.5" y="1.5" width="45" height="45" rx="12" fill="url(#logo-tile)" stroke="#E4E7EC" />
+      <path d="M14 16h3.2L30 35.5M23.3 26.2 16.5 35.5" fill="none" stroke="#111827" strokeWidth="2.8" strokeLinecap="round" strokeLinejoin="round" />
+      <path d="M11.5 37h9M25.5 37h9" fill="none" stroke="#111827" strokeWidth="2.4" strokeLinecap="round" />
+      <rect x="31" y="8.5" width="9.5" height="8.5" rx="2" fill="none" stroke="#111827" strokeWidth="1.8" />
+      <path d="M31 12h9.5M34 7v2.4M37.5 7v2.4" fill="none" stroke="#111827" strokeWidth="1.8" strokeLinecap="round" />
     </svg>
   );
 }

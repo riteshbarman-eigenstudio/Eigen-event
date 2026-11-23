@@ -15,6 +15,7 @@ import {
   Building07,
   Clock,
   File06,
+  BookOpen01,
 } from "@untitledui/icons";
 import type { ComponentType } from "react";
 
@@ -30,6 +31,7 @@ export const mainNav: NavItem[] = [
   { label: "Events", href: "/events", icon: Calendar },
   { label: "Contacts", href: "/contacts", icon: Users01 },
   { label: "Integrations", href: "/integrations", icon: Zap },
+  { label: "Tutorial", href: "/tutorial", icon: BookOpen01 },
   { label: "Team", href: "/team", icon: Building07 },
   { label: "Settings", href: "/settings", icon: Settings01 },
 ];
@@ -38,7 +40,7 @@ export const mainNav: NavItem[] = [
 export const eventNav: { label: string; slug: string; icon: Icon; phase: 1 | 2 }[] = [
   { label: "Overview", slug: "", icon: Home01, phase: 1 },
   { label: "Tickets", slug: "/tickets", icon: Ticket01, phase: 1 },
-  { label: "Orders", slug: "/orders", icon: File06, phase: 1 },
+  { label: "Registrations", slug: "/orders", icon: File06, phase: 1 },
   { label: "Attendees", slug: "/attendees", icon: Users01, phase: 1 },
   { label: "Check-in", slug: "/check-in", icon: QrCode01, phase: 1 },
   { label: "Messaging", slug: "/messaging", icon: Mail01, phase: 1 },

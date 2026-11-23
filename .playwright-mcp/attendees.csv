@@ -1,0 +1,4 @@
+﻿name,email,company,ticket,status,source
+Asha Rao,asha@example.com,Bright Labs,General admission,registered,CSV import
+Marco Silva,marco@example.com,Nova,VIP,registered,CSV import
+Lin Zhou,lin@example.com,Orbit,General admission,registered,CSV import

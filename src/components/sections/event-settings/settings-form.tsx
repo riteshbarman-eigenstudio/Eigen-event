@@ -28,7 +28,7 @@ export function SettingsForm() {
         <CardHeader title="Registration" />
         <CardBody className="flex flex-col gap-4">
           <Input name="capacity" type="number" label="Total capacity" defaultValue={e.capacity} />
-          <Checkbox label="Enable waitlist" hint="Let guests join a waitlist when a ticket sells out." defaultChecked />
+          <Checkbox label="Enable waitlist" hint="Let guests join a waitlist when registration is full." defaultChecked />
           <Checkbox label="Require approval" hint="Review each registration before it is confirmed." />
         </CardBody>
       </Card>
