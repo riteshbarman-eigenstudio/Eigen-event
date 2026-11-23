@@ -1,9 +1,10 @@
 import Link from "next/link";
 import { publicNav } from "@/config/nav";
 import { Button } from "@/vendor/untitledui/base/button";
+import { DemoLauncher } from "./demo-launcher";
 import { Logo } from "./logo";
 
-export function PublicHeader({ cta = true }: { cta?: boolean }) {
+export function PublicHeader({ cta = true, demo = false }: { cta?: boolean; demo?: boolean }) {
   return (
     <header className="sticky top-0 z-10 border-b border-gray-200 bg-white">
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-4 px-4 md:px-8">
@@ -17,6 +18,7 @@ export function PublicHeader({ cta = true }: { cta?: boolean }) {
             </a>
           ))}
         </nav>
+        {demo && <DemoLauncher />}
         {cta && (
           <Button href="#tickets" size="sm">
             Register

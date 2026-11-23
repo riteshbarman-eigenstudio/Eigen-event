@@ -5,7 +5,7 @@ import { HomeHero } from "@/components/sections/home/home-hero";
 export function HomePage() {
   return (
     <>
-      <PublicHeader cta={false} />
+      <PublicHeader cta={false} demo />
       <main>
         <HomeHero />
       </main>

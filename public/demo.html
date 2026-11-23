@@ -1,0 +1,364 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Eigen Event: app demo</title>
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#F9FAFB;--card:#fff;--ink:#101828;--mut:#475467;--faint:#98A2B3;--line:#EAECF0;--brand:#262A32;--soft:#F2F4F7;--ok:#067647;--okbg:#ECFDF3}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;background:var(--bg);color:var(--ink);font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;-webkit-font-smoothing:antialiased;overflow:hidden}
+body{display:flex;flex-direction:column}
+button{font:inherit;cursor:pointer}
+
+/* stage */
+.wrap{flex:1;min-height:0;position:relative;display:grid;place-items:center;padding:14px 14px 0}
+.stage{position:absolute;left:50%;top:50%;width:1200px;height:640px;transform-origin:center;border-radius:14px;overflow:hidden;background:#fff;border:1px solid var(--line);box-shadow:0 20px 40px -12px rgba(16,24,40,.18)}
+.chrome{height:34px;background:#F9FAFB;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:6px;padding:0 14px}
+.chrome i{width:10px;height:10px;border-radius:50%;background:#D5D7DA;display:block}
+.chrome u{margin-left:12px;flex:0 1 380px;height:20px;border-radius:10px;background:var(--soft);text-decoration:none;font-size:11.5px;color:var(--mut);padding:0 12px;line-height:20px}
+.screen{position:absolute;left:0;right:0;top:34px;bottom:0;display:flex;animation:fade .35s ease}
+@keyframes fade{from{opacity:0}to{opacity:1}}
+
+/* app mock */
+.side{width:200px;border-right:1px solid var(--line);padding:18px 12px;display:flex;flex-direction:column;gap:4px;flex:none;background:#fff}
+.logo{display:flex;align-items:center;gap:9px;padding:0 6px 14px;font-size:17px;letter-spacing:-.02em}
+.logo svg{width:28px;height:28px}
+.logo b{font-weight:700}.logo span{font-weight:300}
+.nav{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:8px;font-size:14px;font-weight:600;color:var(--mut)}
+.nav.on{background:var(--soft);color:var(--ink)}
+.nav svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.main{flex:1;min-width:0;display:flex;flex-direction:column;background:var(--bg)}
+.top{height:54px;background:#fff;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 24px;flex:none}
+.top .srch{width:300px;height:34px;border:1px solid var(--line);border-radius:8px;padding:0 12px;font-size:13px;color:var(--faint);display:flex;align-items:center}
+.top .r{display:flex;align-items:center;gap:10px;font-size:13px;font-weight:600}
+.av{width:30px;height:30px;border-radius:50%;background:#D0D5DD;display:grid;place-items:center;font-size:12px;font-weight:700;color:#344054}
+.content{flex:1;min-height:0;padding:22px 28px;overflow:hidden;display:flex;flex-direction:column;gap:16px}
+h1{font-size:26px;letter-spacing:-.02em;font-weight:700}
+h2{font-size:20px;letter-spacing:-.01em;font-weight:700}
+h3{font-size:15px;font-weight:700}
+.sub{font-size:14px;color:var(--mut);margin-top:3px}
+.row{display:flex;align-items:center;gap:10px}.sp{justify-content:space-between}
+.card{background:#fff;border:1px solid var(--line);border-radius:12px;box-shadow:0 1px 2px rgba(16,24,40,.05)}
+.pad{padding:18px 20px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:38px;padding:0 16px;border-radius:8px;font-size:14px;font-weight:600;background:#fff;color:#344054;border:1px solid #D0D5DD;box-shadow:0 1px 2px rgba(16,24,40,.05);white-space:nowrap}
+.btn.p{background:var(--brand);color:#fff;border-color:var(--brand)}
+.btn.sm{height:32px;padding:0 12px;font-size:13px}
+.chip{display:inline-flex;align-items:center;padding:3px 10px;border-radius:99px;background:var(--soft);font-size:12.5px;font-weight:600;color:#344054;white-space:nowrap}
+.chip.ok{background:var(--okbg);color:var(--ok)}
+.lbl{font-size:13px;font-weight:600;color:#344054;margin-bottom:6px}
+.inp{height:42px;border:1px solid #D0D5DD;border-radius:8px;padding:0 14px;display:flex;align-items:center;font-size:14.5px;color:var(--ink);background:#fff;box-shadow:0 1px 2px rgba(16,24,40,.05);white-space:nowrap;overflow:hidden}
+.inp.ph{color:var(--faint)}
+.inp.focus{border-color:#344054;box-shadow:0 0 0 4px #F2F4F7}
+.fld{display:flex;flex-direction:column}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:14px}.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th{text-align:left;font-size:12px;color:var(--mut);padding:12px 20px;background:#F9FAFB;border-bottom:1px solid var(--line);font-weight:600}
+td{padding:14px 20px;border-bottom:1px solid var(--line)}
+tr:last-child td{border-bottom:0}
+td small{display:block;color:var(--mut);font-size:12.5px}
+.bar{height:8px;border-radius:5px;background:#EAECF0;overflow:hidden}.bar b{display:block;height:100%;background:var(--brand);border-radius:5px;transition:width .5s}
+.muted{color:var(--mut)}
+.stat .v{font-size:28px;font-weight:700;letter-spacing:-.02em;margin-top:4px}
+.stat .n{font-size:12.5px;color:var(--faint);margin-top:2px}
+.select{height:38px;min-width:230px;border:1px solid #D0D5DD;border-radius:8px;padding:0 12px;display:flex;align-items:center;justify-content:space-between;font-size:14px;font-weight:600;background:#fff;gap:12px}
+.hide{display:none!important}
+
+/* centered auth + wizard */
+.center{flex:1;display:grid;place-items:center;background:var(--bg);width:100%}
+.steps{display:flex;gap:8px}.steps i{flex:1;height:6px;border-radius:4px;background:#EAECF0}.steps i.on{background:var(--brand)}
+
+/* public page */
+.pub{flex-direction:column;background:#fff;width:100%}
+.pubhead{height:56px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 40px;flex:none}
+.hero{padding:34px 40px;border-bottom:1px solid var(--line)}
+.hero h1{font-size:40px;letter-spacing:-.03em;margin-top:12px}
+.stepper{display:flex;align-items:center;gap:12px}
+.stepper .c{width:32px;height:32px;border-radius:8px;border:1px solid #D0D5DD;display:grid;place-items:center;font-size:18px;font-weight:600;background:#fff}
+
+/* ticket */
+.tkt{width:300px;border:1px solid var(--line);border-radius:14px;overflow:hidden;box-shadow:0 12px 24px -8px rgba(16,24,40,.2);background:#fff}
+.tkt .h{background:var(--brand);color:#fff;padding:18px 20px}
+.tkt .h .chip{background:rgba(255,255,255,.15);color:#fff}
+.tkt .b{display:flex;justify-content:space-between;align-items:center;padding:16px 20px;border-top:2px dashed var(--line)}
+
+/* cursor */
+.cursor{position:absolute;left:0;top:0;width:26px;height:26px;z-index:30;pointer-events:none;transition:transform .9s cubic-bezier(.5,0,.2,1);filter:drop-shadow(0 2px 3px rgba(0,0,0,.35))}
+.ripple{position:absolute;width:44px;height:44px;margin:-22px 0 0 -22px;border-radius:50%;border:3px solid #344054;z-index:29;pointer-events:none;opacity:0}
+.ripple.go{animation:rip .6s ease-out}
+@keyframes rip{0%{opacity:.9;transform:scale(.3)}100%{opacity:0;transform:scale(1.5)}}
+.hl{outline:3px solid #344054;outline-offset:3px;border-radius:8px}
+
+.topbar{flex:none;height:56px;display:flex;align-items:center;justify-content:space-between;padding:0 24px;background:#fff;border-bottom:1px solid var(--line)}
+.tl{display:flex;align-items:center;gap:10px;font-size:18px;letter-spacing:-.02em}
+.tl .tag{font-size:12px;font-weight:600;padding:3px 10px;border-radius:99px;background:var(--soft);color:#344054;letter-spacing:0}
+.exit{height:36px;padding:0 16px;border-radius:8px;border:1px solid #D0D5DD;background:#fff;font-weight:600;font-size:14px;color:#344054}
+.exit:hover{background:#F9FAFB}
+/* bottom controls */
+.ctrl{flex:none;padding:12px 24px 16px;display:flex;flex-direction:column;align-items:center;gap:10px}
+.cap{width:100%;max-width:1000px;background:#fff;border:1px solid var(--line);border-radius:12px;padding:12px 18px;display:flex;gap:14px;align-items:flex-start;box-shadow:0 1px 2px rgba(16,24,40,.05);min-height:70px}
+.cap .who{flex:none;font-size:11.5px;font-weight:700;letter-spacing:.06em;padding:4px 10px;border-radius:99px;background:var(--brand);color:#fff;margin-top:2px}
+.cap .who.att{background:#fff;color:var(--ink);border:1.5px solid var(--ink)}
+.cap h4{font-size:16px;font-weight:700}
+.cap p{font-size:14px;color:var(--mut);margin-top:2px;line-height:1.45}
+.nv{display:flex;align-items:center;gap:14px}
+.nv .b{height:40px;padding:0 20px;border-radius:99px;border:1px solid #D0D5DD;background:#fff;font-weight:600;font-size:14px;color:#344054}
+.nv .b.p{background:var(--brand);color:#fff;border-color:var(--brand)}
+.nv .b:disabled{opacity:.4;cursor:default}
+.dots{display:flex;gap:6px;align-items:center}
+.dots i{width:8px;height:8px;border-radius:50%;background:#D0D5DD;display:block;cursor:pointer}
+.dots i.on{background:var(--brand);width:22px;border-radius:5px}
+.dots i.att{background:#98A2B3}
+.count{font-size:13px;font-weight:600;color:var(--mut);min-width:84px;text-align:center}
+@media (max-width:760px){.cap{flex-direction:column}.dots{display:none}}
+</style>
+</head>
+<body>
+
+<div class="topbar"><div class="tl"><svg viewBox="0 0 48 48" width="26" height="26"><use href="#lg"/></svg><span><span style="font-weight:300">eigen</span><b>event</b></span><span class="tag">App demo</span></div><button class="b exit" id="exit">&times; Exit demo</button></div>
+<svg width="0" height="0" style="position:absolute"><defs><symbol id="lg" viewBox="0 0 48 48"><rect x="1.5" y="1.5" width="45" height="45" rx="12" fill="#F4F5F7" stroke="#E4E7EC"/><path d="M14 16h3.2L30 35.5M23.3 26.2 16.5 35.5" fill="none" stroke="#111827" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M11.5 37h9M25.5 37h9" fill="none" stroke="#111827" stroke-width="2.4" stroke-linecap="round"/><rect x="31" y="8.5" width="9.5" height="8.5" rx="2" fill="none" stroke="#111827" stroke-width="1.8"/><path d="M31 12h9.5M34 7v2.4M37.5 7v2.4" fill="none" stroke="#111827" stroke-width="1.8" stroke-linecap="round"/></symbol></defs></svg>
+<div class="wrap" id="wrap">
+  <div class="stage" id="stage">
+    <div class="chrome"><i></i><i></i><i></i><u id="url">eigenevent.app</u></div>
+    <div class="screen" id="screen"></div>
+    <div class="ripple" id="rip"></div>
+    <svg class="cursor" id="cur" viewBox="0 0 24 24"><path d="M5 3l14 8-6.2 1.6L9.6 19z" fill="#101828" stroke="#fff" stroke-width="1.6" stroke-linejoin="round"/></svg>
+  </div>
+</div>
+
+<div class="ctrl">
+  <div class="cap" id="cap"></div>
+  <div class="nv">
+    <button class="b" id="prev">&larr; Previous</button>
+    <div class="dots" id="dots"></div>
+    <span class="count" id="count"></span>
+    <button class="b" id="replay" title="Replay this step">&#8635; Replay</button>
+    <button class="b p" id="next">Next &rarr;</button>
+  </div>
+</div>
+
+<script>
+(function(){
+  var $ = function(s,r){return (r||document).querySelector(s)};
+  var stage=$('#stage'), screen=$('#screen'), cur=$('#cur'), rip=$('#rip'), wrap=$('#wrap');
+  var scale=1, pos={x:1100,y:620}, token=0, idx=0;
+
+  /* ---------- icons ---------- */
+  var ic={
+    cal:'<svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="3"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>',
+    users:'<svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c0-3.6 2.9-6 6.5-6s6.5 2.4 6.5 6"/><circle cx="17" cy="9" r="2.5"/></svg>',
+    bolt:'<svg viewBox="0 0 24 24"><path d="M13 3 5 13h6l-1 8 8-10h-6z"/></svg>',
+    book:'<svg viewBox="0 0 24 24"><path d="M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2zM4 19V5"/></svg>',
+    shield:'<svg viewBox="0 0 24 24"><path d="M12 3 4 6v6c0 4.5 3.3 7.8 8 9 4.7-1.2 8-4.5 8-9V6z"/></svg>',
+    gear:'<svg viewBox="0 0 24 24"><path d="M4 7h10M18 7h2M4 17h2M10 17h10"/><circle cx="16" cy="7" r="2"/><circle cx="8" cy="17" r="2"/></svg>',
+    qr:'<svg viewBox="0 0 24 24" style="width:54px;height:54px;fill:none;stroke:#101828;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><path d="M14 14h3v3h-3zM20 14v.01M17 20h4M20 17v3"/></svg>',
+    chev:'<svg viewBox="0 0 24 24" style="width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2"><path d="m6 9 6 6 6-6"/></svg>'
+  };
+  var logo='<svg viewBox="0 0 48 48"><rect x="1.5" y="1.5" width="45" height="45" rx="12" fill="#F4F5F7" stroke="#E4E7EC"/><path d="M14 16h3.2L30 35.5M23.3 26.2 16.5 35.5" fill="none" stroke="#111827" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/><path d="M11.5 37h9M25.5 37h9" fill="none" stroke="#111827" stroke-width="2.4" stroke-linecap="round"/><rect x="31" y="8.5" width="9.5" height="8.5" rx="2" fill="none" stroke="#111827" stroke-width="1.8"/><path d="M31 12h9.5M34 7v2.4M37.5 7v2.4" fill="none" stroke="#111827" stroke-width="1.8" stroke-linecap="round"/></svg>';
+  function logoText(){return '<span><span>eigen</span><b>event</b></span>'}
+
+  /* ---------- screen builders ---------- */
+  function shell(active, inner){
+    var items=[['Events',ic.cal],['Contacts',ic.users],['Integrations',ic.bolt],['Tutorial',ic.book],['Team',ic.shield],['Settings',ic.gear]];
+    return '<div class="side"><div class="logo">'+logo+logoText()+'</div>'+items.map(function(i){return '<div class="nav'+(i[0]===active?' on':'')+'" id="nav-'+i[0].toLowerCase()+'">'+i[1]+i[0]+'</div>'}).join('')+'</div>'
+      +'<div class="main"><div class="top"><div class="srch">Search events, people, orders</div><div class="r"><span class="btn sm">Sign out</span><div class="av">RS</div></div></div><div class="content">'+inner+'</div></div>';
+  }
+  function eventHead(section, status){
+    return '<div class="row sp"><div class="row"><h2>Eigen Summit 2027</h2><span class="chip'+(status==='draft'?'':' ok')+'">'+(status==='draft'?'Draft':'Registration open')+'</span></div><span class="btn sm">View public page</span></div>'
+      +'<div class="select" id="dd" style="width:230px">'+section+ic.chev+'</div>';
+  }
+  function inp(id,val,ph){return '<div class="inp'+(val?'':' ph')+'" id="'+id+'" data-ph="'+(ph||'')+'">'+(val||ph||'')+'</div>'}
+  function field(l,id,val,ph){return '<div class="fld"><div class="lbl">'+l+'</div>'+inp(id,val,ph)+'</div>'}
+
+  function login(){
+    return '<div class="center"><div style="width:400px;text-align:center"><div class="logo" style="justify-content:center;font-size:22px;padding-bottom:18px">'+logo.replace('<svg','<svg style="width:40px;height:40px"')+logoText()+'</div>'
+      +'<h2>Welcome back</h2><p class="sub">Sign in to manage your events.</p><div class="card pad" style="margin-top:18px;text-align:left;display:flex;flex-direction:column;gap:14px">'
+      +field('Email','f-email','','you@company.com')+field('Password','f-pass','','Enter your password')
+      +'<div class="btn p" id="signin" style="height:44px">Sign in</div></div></div></div>';
+  }
+  function eventsEmpty(){
+    return '<div class="row sp"><div><h1>Events</h1><p class="sub">Everything you are planning, taking registrations for and running.</p></div><div class="btn p" id="create">+ Create event</div></div>'
+      +'<div class="card" style="flex:1;display:grid;place-items:center;text-align:center"><div><div class="av" style="margin:0 auto 12px;width:44px;height:44px">'+ic.cal.replace('<svg','<svg style="width:22px;height:22px;fill:none;stroke:#344054;stroke-width:1.8"')+'</div><h3>No events found</h3><p class="sub" style="margin-bottom:14px">Create your first event to get started.</p></div></div>';
+  }
+  function wizard(n, body, last){
+    var t=['Basics','Format','Tickets','Publish'];
+    return '<div class="center"><div class="card" style="width:640px"><div class="pad" style="border-bottom:1px solid var(--line)"><h3>Step '+n+' of 4: '+t[n-1]+'</h3><p class="sub" style="margin-top:2px">You can change everything later in event settings.</p></div>'
+      +'<div class="steps" style="padding:16px 20px 0">'+[1,2,3,4].map(function(i){return '<i class="'+(i<=n?'on':'')+'"></i>'}).join('')+'</div>'
+      +'<div class="pad" style="display:flex;flex-direction:column;gap:14px">'+body
+      +'<div class="row sp" style="border-top:1px solid var(--line);padding-top:16px;margin-top:4px"><span class="btn">'+(n===1?'Cancel':'Back')+'</span><div class="row">'+(last?'<span class="btn">Save as draft</span>':'')+'<span class="btn p" id="next">'+(last?'Publish event':'Continue')+'</span></div></div></div></div></div>';
+  }
+  function w1(){return wizard(1,field('Event name','w-name','','Eigen Summit 2027')+field('Short description','w-desc','','One or two sentences for the event page')+'<div class="g2">'+field('Start date','w-date','','dd/mm/yyyy')+field('Start time','w-time','09:00')+'</div>')}
+  function w2(){return wizard(2,'<div class="fld"><div class="lbl">Format</div><div class="row" id="fmt"><span class="btn" id="fmt-in">In-person</span><span class="btn" id="fmt-vi">Virtual</span><span class="btn" id="fmt-hy">Hybrid</span></div></div>'+field('Venue or city','w-city','','Bengaluru International Centre')+field('Capacity','w-cap','','500'))}
+  function w3(){return wizard(3,field('First ticket name','w-tk','General admission')+'<div class="g2">'+field('Price (₹)','w-price','','499')+field('Quantity','w-qty','','500')+'</div><p class="sub">Use 0 for a free ticket.</p>')}
+  function w4(){return wizard(4,field('Event page address','w-slug','','eigen-summit-2027')+'<p class="sub" style="margin-top:-8px" id="w-url">eigenevent.app/e/your-address</p>'+field('Visibility','w-vis','Public, anyone can find it')
+      +'<div class="card pad" style="background:#F9FAFB;font-size:13.5px"><b>Eigen Summit 2027</b> · 14 Mar 2027 09:00 · Bengaluru · General admission ₹499 × 500</div>',true)}
+
+  function chart(vals,last){
+    var m=Math.max.apply(null,vals.concat([1]));
+    return '<div class="row" style="align-items:flex-end;gap:8px;height:56px">'+vals.map(function(v,i){return '<div style="flex:1;height:'+Math.max(4,v/m*100)+'%;background:'+(i===vals.length-1&&last?'#262A32':'#D0D5DD')+';border-radius:4px"></div>'}).join('')+'</div>';
+  }
+  function overview(reg, ci){
+    var rv=reg?'2':'0', rev=reg?'₹998':'₹0', left=reg?'498':'500';
+    var weeks=reg?[0,0,0,0,0,0,0,0,0,0,0,2]:[0,0,0,0,0,0,0,0,0,0,0,0];
+    return eventHead('Overview')
+      +'<div class="g4"><div class="card pad stat"><div class="muted" style="font-size:13px">Registered</div><div class="v">'+rv+'</div><div class="n">'+(reg?'0':'0')+'% of 500 capacity</div></div>'
+      +'<div class="card pad stat"><div class="muted" style="font-size:13px">Revenue</div><div class="v">'+rev+'</div><div class="n">Gross, before fees</div></div>'
+      +'<div class="card pad stat"><div class="muted" style="font-size:13px">Checked in</div><div class="v">'+(ci||0)+'</div><div class="n">Opens on event day</div></div>'
+      +'<div class="card pad stat"><div class="muted" style="font-size:13px">Spots left</div><div class="v">'+left+'</div><div class="n">Across all ticket types</div></div></div>'
+      +'<div style="display:grid;grid-template-columns:2fr 1fr;gap:14px;flex:1;min-height:0"><div style="display:flex;flex-direction:column;gap:14px">'
+      +'<div class="card pad"><h3>People registered per week</h3><div style="margin-top:12px">'+chart(weeks,reg)+'</div></div>'
+      +'<div class="card pad"><div class="row sp"><div><h3>Your event is live</h3><p class="sub">Share this link so people can register.</p></div><div class="row"><span class="btn sm p" id="open">Open public page</span><span class="btn sm" id="copy">Copy link</span></div></div><div class="card pad" style="margin-top:10px;background:#F9FAFB;padding:9px 12px;font-size:13.5px">eigenevent.app/e/eigen-summit-2027</div></div></div>'
+      +'<div style="display:flex;flex-direction:column;gap:14px"><div class="card pad"><h3>Launch checklist</h3><div style="display:flex;flex-direction:column;gap:9px;margin-top:10px;font-size:13.5px"><span>✓ Create the event</span><span>✓ Add ticket types</span><span>✓ Publish the event page</span><span class="'+(reg?'':'muted')+'">'+(reg?'✓':'○')+' Get your first registration</span><span class="muted">○ Send the first announcement</span></div></div>'
+      +'<div class="card pad"><h3>Sent updates</h3><p class="sub">Nothing sent yet.</p></div></div></div>';
+  }
+  function ticketsPage(formOpen, added){
+    return eventHead('Tickets')
+      +'<div class="row sp"><div><h2>Tickets</h2><p class="sub">Ticket types, pricing and discount codes.</p></div><span class="btn p" id="add">+ Add ticket type</span></div>'
+      +'<div class="card pad '+(formOpen?'':'hide')+'" id="tform"><h3>New ticket type</h3><div class="g3" style="margin-top:12px">'+field('Name','t-name','','Early bird')+field('Price (₹)','t-price','','299')+field('Quantity','t-qty','','100')+'</div><div class="row" style="margin-top:14px"><span class="btn p sm" id="tsave">Save ticket type</span><span class="btn sm">Cancel</span></div></div>'
+      +'<div class="g2" id="tlist"><div class="card pad"><div class="row sp"><div><h3>General admission</h3><p class="sub">₹499 per ticket</p></div><span class="chip ok">Open</span></div><div class="bar" style="margin:14px 0 8px"><b style="width:0%"></b></div><p class="sub">0 of 500 registered</p></div>'
+      +'<div class="card pad '+(added?'':'hide')+'" id="tnew"><div class="row sp"><div><h3>Early bird</h3><p class="sub">₹299 per ticket</p></div><span class="chip ok">Open</span></div><div class="bar" style="margin:14px 0 8px"><b style="width:0%"></b></div><p class="sub">0 of 100 registered</p></div></div>';
+  }
+  function publicPage(done){
+    return '<div class="pub" style="display:flex"><div class="pubhead"><div class="logo" style="padding:0">'+logo+logoText()+'</div><span class="btn sm p">Register</span></div>'
+      +'<div class="hero"><span class="chip">hybrid</span><h1>Eigen Summit 2027</h1><p class="sub" style="font-size:17px;margin-top:6px">Two days on building products people love.</p><div class="row muted" style="margin-top:12px;font-size:14px"><span>14 Mar 2027</span><span>·</span><span>Bengaluru</span></div></div>'
+      +'<div style="flex:1;min-height:0;padding:22px 40px;display:grid;grid-template-columns:2fr 1fr;gap:28px"><div><h2 style="margin-bottom:12px">Tickets</h2>'
+      +'<div style="display:flex;flex-direction:column;gap:12px"><div class="card pad row sp"><div><h3>General admission</h3><p class="sub">₹499 · 500 left</p></div><div class="stepper"><span class="c" id="minus">−</span><b id="qty" style="width:18px;text-align:center">0</b><span class="c" id="plus">+</span></div></div></div></div>'
+      +'<div class="card pad" id="sumcard" style="align-self:start;display:flex;flex-direction:column;gap:12px"><h3>Registration summary</h3><div class="row sp" style="font-size:14px"><span class="muted"><span id="cnt">0</span> ticket(s)</span><b id="amt">₹0</b></div>'
+      +field('Full name','p-name','','Asha Rao')+field('Email','p-email','','asha@example.com')+'<div class="btn p" id="regbtn" style="height:42px">Register</div></div>'
+      +'<div id="tkcard" class="hide" style="align-self:start;display:none;flex-direction:column;align-items:center;gap:12px"><div class="chip ok" style="font-size:13.5px">You are registered</div><div class="tkt"><div class="h"><span class="chip">General admission</span><div style="font-size:21px;font-weight:700;margin-top:10px">Eigen Summit 2027</div><div style="font-size:13px;opacity:.85;margin-top:3px">14 Mar 2027 · Bengaluru</div></div><div class="b"><div><div class="muted" style="font-size:12.5px">Attendee</div><b>Asha Rao</b></div>'+ic.qr+'</div></div></div></div></div>';
+  }
+  function regsPage(){
+    return eventHead('Registrations')
+      +'<div class="card" style="flex:1;overflow:hidden"><div class="row sp pad" style="border-bottom:1px solid var(--line);padding:14px 20px"><h3>All registrations</h3><div class="row"><span class="btn sm" id="import">Import CSV</span><span class="btn sm" id="export">Export CSV</span></div></div>'
+      +'<table><tr><th>Registration</th><th>Registrant</th><th>Tickets</th><th>Total</th><th>Status</th></tr><tr><td><b>R9K2TQ</b></td><td><b>Asha Rao</b><small>asha@example.com</small></td><td>2 x General admission</td><td>₹998</td><td><span class="chip ok">paid</span></td></tr></table>'
+      +'<div class="card pad hide" id="csvmsg" style="margin:16px 20px;background:#ECFDF3;border-color:#ABEFC6;color:#067647;font-size:14px;font-weight:600">Downloaded registrations.csv</div></div>';
+  }
+  function msgPage(composer, sent){
+    return eventHead('Messaging')
+      +'<div class="row sp"><div><h2>Messaging</h2><p class="sub">HTML emails to everyone registered. Demo: nothing leaves your browser.</p></div><span class="btn p" id="newmail">+ New email</span></div>'
+      +'<div class="card pad '+(composer?'':'hide')+'" id="comp" style="display:'+(composer?'grid':'none')+';grid-template-columns:1fr 1fr;gap:22px"><div style="display:flex;flex-direction:column;gap:12px">'+field('Template','m-tpl','Announcement')+field('Subject','m-sub','','Registration is open')+field('Message','m-msg','','We are excited to announce our event.')+'<div class="row"><span class="btn p" id="send">Send email</span><span class="btn">Download HTML</span></div></div>'
+      +'<div style="background:#F2F4F7;border-radius:10px;padding:14px"><div style="background:#fff;border-radius:8px;overflow:hidden"><div style="background:#262A32;color:#fff;padding:10px 14px;font-size:15px"><span style="font-weight:300">eigen</span><b>event</b></div><div style="padding:14px"><div style="font-size:10.5px;letter-spacing:.1em;color:var(--mut)">EIGEN SUMMIT 2027</div><div style="font-size:20px;font-weight:800;margin:4px 0" id="pv-h">Registration is open</div><div class="muted" style="font-size:13px" id="pv-m">We are excited to announce our event. Reserve your spot today, seats are limited.</div><div class="btn p sm" style="margin-top:12px">Register now</div></div></div></div></div>'
+      +'<div class="card '+(sent?'':'hide')+'" id="sentrow"><table><tr><th>Subject</th><th>Recipients</th><th>Status</th><th>Sent</th></tr><tr><td><b>Registration is open</b></td><td>2</td><td><span class="chip ok">Sent</span></td><td>Just now</td></tr></table></div>';
+  }
+  function checkPage(n){
+    return eventHead('Check-in')
+      +'<div class="row sp"><div><h2>Check-in</h2><p class="sub">Scan tickets and welcome guests at the door.</p></div><span class="btn">Open scanner app</span></div>'
+      +'<div style="display:grid;grid-template-columns:1fr 1.6fr;gap:14px;flex:1;min-height:0"><div style="display:flex;flex-direction:column;gap:14px"><div class="card pad"><div class="muted" style="font-size:13px">Arrivals · live counter</div><div style="font-size:44px;font-weight:700;margin:6px 0" id="arr">'+n+'</div><div class="bar"><b id="arrbar" style="width:'+(n*50)+'%"></b></div><p class="sub" style="margin-top:8px"><span id="arrn">'+n+'</span> of 2 guests</p></div>'
+      +'<div class="card pad" style="text-align:center"><div class="btn p" id="scan" style="width:100%">Simulate scan</div><p class="sub hide" id="welcome" style="margin-top:12px;color:#067647;font-weight:600">✓ Welcome, Asha Rao</p></div></div>'
+      +'<div class="card"><table><tr><th>Guest</th><th></th></tr><tr><td><b>Asha Rao</b><small>General admission</small></td><td id="g1"><span class="btn sm">Check in</span></td></tr><tr><td><b>Asha Rao (guest 1)</b><small>General admission</small></td><td><span class="btn sm">Check in</span></td></tr></table></div></div>';
+  }
+  function endCard(){
+    return '<div class="center"><div style="text-align:center;max-width:520px"><div class="logo" style="justify-content:center;font-size:26px">'+logo.replace('<svg','<svg style="width:48px;height:48px"')+logoText()+'</div><h1 style="margin-top:8px">From idea to checked-in guest</h1><p class="sub" style="font-size:16px;margin-top:10px">Create an event, share one link, let people register, keep them updated, and check them in. All in one place.</p><div class="row" style="justify-content:center;margin-top:20px"><span class="btn p" id="endcta">Create your first event</span></div></div></div>';
+  }
+
+  /* ---------- steps ---------- */
+  function setText(id,t){var e=$(id); if(e){e.textContent=t; e.classList.remove('ph')}}
+  var qty=0;
+  var steps=[
+   {who:'org',url:'eigenevent.app/login',title:'Sign in',text:'The organizer signs in with email and password to open the dashboard.',
+    screen:login,act:[{t:'#f-email',type:'ritesh@eigenstudio.com'},{t:'#f-pass',type:'••••••••'},{t:'#signin',click:1}]},
+   {who:'org',url:'eigenevent.app/events',title:'Your events',text:'The dashboard starts empty. Click Create event to open the setup wizard.',
+    screen:function(){return shell('Events',eventsEmpty())},act:[{t:'#create',click:1}]},
+   {who:'org',url:'eigenevent.app/events/new',title:'Create event: basics',text:'Name the event, add a short description, then pick the date and time.',
+    screen:w1,act:[{t:'#w-name',type:'Eigen Summit 2027'},{t:'#w-desc',type:'Two days on building products people love.'},{t:'#w-date',type:'14/03/2027'},{t:'#next',click:1}]},
+   {who:'org',url:'eigenevent.app/events/new',title:'Create event: format',text:'Choose in-person, virtual or hybrid, then add the venue and capacity.',
+    screen:w2,act:[{t:'#fmt-hy',click:1,fn:function(){$('#fmt-hy').classList.add('p')}},{t:'#w-city',type:'Bengaluru International Centre'},{t:'#w-cap',type:'500'},{t:'#next',click:1}]},
+   {who:'org',url:'eigenevent.app/events/new',title:'Create event: tickets',text:'Add the first ticket with a price in rupees and a quantity. Use 0 for a free ticket.',
+    screen:w3,act:[{t:'#w-price',type:'499'},{t:'#w-qty',type:'500'},{t:'#next',click:1}]},
+   {who:'org',url:'eigenevent.app/events/new',title:'Create event: publish',text:'Pick the public address, then publish. Save as draft keeps it private until you are ready.',
+    screen:w4,act:[{t:'#w-slug',type:'eigen-summit-2027',fn:function(){setText('#w-url','eigenevent.app/e/eigen-summit-2027')}},{t:'#next',click:1}]},
+   {who:'org',url:'eigenevent.app/events/evt_1',title:'Event overview',text:'Each event gets its own control room: live numbers, a launch checklist and a public link to share.',
+    screen:function(){return shell('Events',overview(false))},act:[{t:'#copy',click:1,fn:function(){setText('#copy','Copied')}}]},
+   {who:'org',url:'eigenevent.app/events/evt_1/tickets',title:'Add another ticket type',text:'Use the section menu to open Tickets, then add more ticket types with their own price and stock.',
+    screen:function(){return shell('Events',ticketsPage(false,false))},act:[{t:'#dd',click:1},{t:'#add',click:1,fn:function(){$('#tform').classList.remove('hide')}},{t:'#t-name',type:'Early bird'},{t:'#t-price',type:'299'},{t:'#t-qty',type:'100'},{t:'#tsave',click:1,fn:function(){$('#tnew').classList.remove('hide');$('#tform').classList.add('hide')}}]},
+   {who:'att',url:'eigenevent.app/e/eigen-summit-2027',title:'Attendee: register on the event page',text:'Guests open the shared link, choose how many tickets they want, enter a name and email, and register. They get a QR ticket right away.',
+    screen:function(){qty=0;return publicPage()},act:[{t:'#plus',click:1,fn:function(){bump(1)}},{t:'#plus',click:1,fn:function(){bump(1)}},{t:'#p-name',type:'Asha Rao'},{t:'#p-email',type:'asha@example.com'},{t:'#regbtn',click:1,fn:function(){$('#sumcard').style.display='none';var k=$('#tkcard');k.classList.remove('hide');k.style.display='flex'}}]},
+   {who:'org',url:'eigenevent.app/events/evt_1/orders',title:'See the registration',text:'The new registration appears at once. Export it to CSV, or import many from a CSV file.',
+    screen:function(){return shell('Events',regsPage())},act:[{t:'#dd',click:1},{t:'#export',click:1,fn:function(){$('#csvmsg').classList.remove('hide')}}]},
+   {who:'org',url:'eigenevent.app/events/evt_1/messaging',title:'Send an update',text:'Write an HTML email from a template, preview it live, and send it to everyone registered.',
+    screen:function(){return shell('Events',msgPage(false,false))},act:[{t:'#dd',click:1},{t:'#newmail',click:1,fn:function(){var c=$('#comp');c.classList.remove('hide');c.style.display='grid'}},{t:'#m-sub',type:'Registration is open'},{t:'#send',click:1,fn:function(){$('#comp').style.display='none';$('#sentrow').classList.remove('hide')}}]},
+   {who:'org',url:'eigenevent.app/events/evt_1/check-in',title:'Check guests in',text:'On the day, scan tickets or search by name. The arrivals counter updates live.',
+    screen:function(){return shell('Events',checkPage(0))},act:[{t:'#dd',click:1},{t:'#scan',click:1,fn:function(){$('#arr').textContent='1';$('#arrn').textContent='1';$('#arrbar').style.width='50%';$('#welcome').classList.remove('hide');$('#g1').innerHTML='<span class="chip ok">Checked in</span>'}}]},
+   {who:'org',url:'eigenevent.app/events/evt_1',title:'Back to the numbers',text:'The overview now shows registrations, revenue and check-ins, all from the same data.',
+    screen:function(){return shell('Events',overview(true,1))},act:[{t:'#open',click:0}]},
+   {who:'org',url:'eigenevent.app',title:'That is the whole flow',text:'Create, share, register, update and check in. Close this demo to try it yourself.',
+    screen:endCard,act:[{t:'#endcta',click:1,fn:function(){location.href='/events/new'}}]}
+  ];
+
+  function bump(d){qty=Math.max(0,qty+d);$('#qty').textContent=qty;$('#cnt').textContent=qty;$('#amt').textContent='₹'+(qty*499)}
+
+  /* ---------- engine ---------- */
+  function sleep(ms){return new Promise(function(r){setTimeout(r,ms)})}
+  function place(x,y){cur.style.transform='translate('+x+'px,'+y+'px)'; pos={x:x,y:y}}
+  function center(el){
+    var s=stage.getBoundingClientRect(), r=el.getBoundingClientRect();
+    return {x:(r.left-s.left+Math.min(r.width/2,60))/scale, y:(r.top-s.top+r.height/2)/scale};
+  }
+  async function typeInto(el,text,tk){
+    el.classList.remove('ph'); el.classList.add('focus'); el.textContent='';
+    for(var i=1;i<=text.length;i++){ if(tk!==token)return; el.textContent=text.slice(0,i); await sleep(34); }
+    await sleep(160); el.classList.remove('focus');
+  }
+  async function run(i){
+    var tk=++token, st=steps[i];
+    screen.innerHTML=st.screen();
+    $('#url').textContent=st.url;
+    stage.querySelectorAll('.hl').forEach(function(e){e.classList.remove('hl')});
+    await sleep(250);
+    for(var a=0;a<st.act.length;a++){
+      if(tk!==token)return;
+      var ac=st.act[a], el=$(ac.t); if(!el)continue;
+      var c=center(el); place(c.x,c.y);
+      await sleep(1000); if(tk!==token)return;
+      if(ac.type){ await typeInto(el,ac.type,tk); if(tk!==token)return; }
+      if(ac.click){
+        rip.style.left=(c.x)+'px'; rip.style.top=c.y+'px'; rip.classList.remove('go'); void rip.offsetWidth; rip.classList.add('go');
+        await sleep(200);
+      }
+      if(ac.fn) ac.fn();
+      await sleep(ac.click?650:250);
+    }
+  }
+  function layoutCap(i){
+    var st=steps[i];
+    $('#cap').innerHTML='<span class="who'+(st.who==='att'?' att':'')+'">'+(st.who==='att'?'ATTENDEE':'ORGANIZER')+'</span><div><h4>'+st.title+'</h4><p>'+st.text+'</p></div>';
+    $('#count').textContent='Step '+(i+1)+' of '+steps.length;
+    $('#prev').disabled=i===0; $('#next').disabled=i===steps.length-1;
+    var d=$('#dots'); d.innerHTML=steps.map(function(s,k){return '<i class="'+(k===i?'on ':'')+(s.who==='att'?'att':'')+'" data-k="'+k+'" title="'+s.title+'"></i>'}).join('');
+    [].forEach.call(d.children,function(e){e.onclick=function(){go(+e.dataset.k)}});
+  }
+  function go(i){
+    idx=Math.max(0,Math.min(steps.length-1,i));
+    layoutCap(idx);
+    try{history.replaceState(null,'','#'+(idx+1))}catch(e){}
+    run(idx);
+  }
+  function fit(){
+    var w=wrap.clientWidth-28, h=wrap.clientHeight-14;
+    scale=Math.min(w/1200,h/640,1.15);
+    stage.style.transform='translate(-50%,-50%) scale('+scale+')';
+  }
+  $('#next').onclick=function(){go(idx+1)};
+  $('#prev').onclick=function(){go(idx-1)};
+  $('#replay').onclick=function(){go(idx)};
+  addEventListener('keydown',function(e){
+    if(e.key==='ArrowRight'||e.key==='PageDown'||e.key===' '){e.preventDefault();go(idx+1)}
+    else if(e.key==='ArrowLeft'||e.key==='PageUp'){e.preventDefault();go(idx-1)}
+    else if(e.key==='Escape'){exitDemo()}
+  });
+  function exitDemo(){
+    var same=false; try{same=document.referrer&&new URL(document.referrer).origin===location.origin}catch(e){}
+    if(same&&history.length>1) history.back(); else location.href='/events';
+  }
+  $('#exit').onclick=exitDemo;
+  addEventListener('resize',fit);
+  place(1100,600); fit();
+  go((parseInt(location.hash.slice(1),10)||1)-1);
+})();
+</script>
+</body>
+</html>
